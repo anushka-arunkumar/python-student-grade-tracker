@@ -5,102 +5,129 @@
         "scores": {
             "Math": 92,
             "Science": 88,
-            "English": 95
-        }
-    },
-    {
-        "student_id": "101",  
-        "name": "Brian Smith",
-        "scores": {
-            "Math": 75,
-            "Science": 80,
-            "English": 70
+            "English": 95,
+            "History": 85,
+            "Geography": 90
         }
     },
     {
         "student_id": "S102",
-        "name": "Catherine99",  
+        "name": "Bob Martin",
         "scores": {
-            "Math": 85,
-            "Science": 89,
-            "English": 90
+            "Math": 45,
+            "Science": 52,
+            "English": 48,
+            "History": 39,
+            "Geography": 50
+        }
+    },
+    {
+        "student_id": "101",
+        "name": "Invalid ID Student",
+        "scores": {
+            "Math": 75,
+            "Science": 80,
+            "English": 70,
+            "History": 65,
+            "Geography": 72
         }
     },
     {
         "student_id": "S103",
         "name": "",
         "scores": {
-            "Math": 80,
-            "Science": 75,
-            "English": 88
+            "Math": 88,
+            "Science": 91,
+            "English": 87,
+            "History": 90,
+            "Geography": 85
         }
     },
     {
         "student_id": "S104",
-        "name": "David Kumar",
+        "name": "John123",
         "scores": {
-            "Math": 120,
-            "Science": 85,
-            "English": 90
+            "Math": 60,
+            "Science": 70,
+            "English": 80,
+            "History": 75,
+            "Geography": 77
         }
     },
     {
         "student_id": "S105",
-        "name": "Emma Watson",
+        "name": "Mary Jane",
         "scores": {
             "Math": 90,
-            "Science": null,
-            "English": 94
+            "Science": 85,
+            "English": 88
         }
     },
     {
         "student_id": "S106",
-        "name": "Frank Miller",
+        "name": "Chris Paul",
         "scores": {
-            "Math": -5,
-            "Science": 60,
-            "English": 70
+            "Math": 70,
+            "Science": 72,
+            "English": 68,
+            "History": 60,
+            "Geography": 65,
+            "Art": 80
         }
     },
     {
         "student_id": "S107",
-        "name": "George Adams",
+        "name": "Robert Brown",
         "scores": {
-            "Math": 85,
-            "Science": "90",  
-            "English": 75
-        }
-    },
-    {
-        "student_id": "S101",  
-        "name": "Duplicate Student",
-        "scores": {
-            "Math": 80,
-            "Science": 78,
-            "English": 82
+            "Math": null,
+            "Science": 55,
+            "English": 60,
+            "History": 70,
+            "Geography": 80
         }
     },
     {
         "student_id": "S108",
-        "name": "Helen Parker",
-        "scores": {}  
-    },
-    {
-        "student_id": "S109",
-        "name": "Ivy@Stone",
+        "name": "Emma Watson",
         "scores": {
-            "Math": 70,
+            "Math": "A",
             "Science": 65,
-            "English": 60
+            "English": 70,
+            "History": 75,
+            "Geography": 80
         }
     },
     {
-        "student_id": null,
-        "name": "No ID Student",
+        "student_id": "S109",
+        "name": "Grace Lee",
         "scores": {
-            "Math": 50,
-            "Science": 55,
-            "English": 60
+            "Math": -10,
+            "Science": 50,
+            "English": 60,
+            "History": 70,
+            "Geography": 80
+        }
+    },
+    {
+        "student_id": "S110",
+        "name": "Tom Cruise",
+        "scores": {
+            "Math": 110,
+            "Science": 95,
+            "English": 90,
+            "History": 85,
+            "Geography": 88
+        }
+    },
+    {
+        "student_id": "S101",
+        "name": "Duplicate Alice",
+        "scores": {
+            "Math": 80,
+            "Science": 82,
+            "English": 84,
+            "History": 86,
+            "Geography": 88
         }
     }
 ]

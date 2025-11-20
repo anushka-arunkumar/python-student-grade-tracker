@@ -10,6 +10,8 @@ GRADE_RANGES = {
     "F": (0, 60),
 }
 
+SUBJECTS = ["Math", "Science", "English", "History", "Geography"]
+
 
 def get_students():
     try:
@@ -41,6 +43,10 @@ def validate_student(student_list):
             print(f"invalid name received for student id {student['student_id']}")
             continue
 
+        are_subjects_valid = validate_subjects(student["scores"])
+        if not are_subjects_valid:
+            continue
+
         are_scores_valid = validate_scores(student["scores"])
         if not are_scores_valid:
             print(f"invalid score/s received for student id {student['student_id']}")
@@ -62,6 +68,16 @@ def validate_name(name):
     if not name:
         return False
     return all(char.isalpha() or char.isspace() for char in name)
+
+
+def validate_subjects(scores_dict):
+    if len(scores_dict) != len(SUBJECTS):
+        print("incorrect number of subjects")
+        return False
+    if set(scores_dict.keys()) != set(SUBJECTS):
+        print("missing or extra subjects")
+        return False
+    return True
 
 
 def validate_scores(scores_dict):
