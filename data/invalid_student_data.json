@@ -1,0 +1,106 @@
+[
+    {
+        "student_id": "S101",
+        "name": "Alice Johnson",
+        "scores": {
+            "Math": 92,
+            "Science": 88,
+            "English": 95
+        }
+    },
+    {
+        "student_id": "101",  
+        "name": "Brian Smith",
+        "scores": {
+            "Math": 75,
+            "Science": 80,
+            "English": 70
+        }
+    },
+    {
+        "student_id": "S102",
+        "name": "Catherine99",  
+        "scores": {
+            "Math": 85,
+            "Science": 89,
+            "English": 90
+        }
+    },
+    {
+        "student_id": "S103",
+        "name": "",
+        "scores": {
+            "Math": 80,
+            "Science": 75,
+            "English": 88
+        }
+    },
+    {
+        "student_id": "S104",
+        "name": "David Kumar",
+        "scores": {
+            "Math": 120,
+            "Science": 85,
+            "English": 90
+        }
+    },
+    {
+        "student_id": "S105",
+        "name": "Emma Watson",
+        "scores": {
+            "Math": 90,
+            "Science": null,
+            "English": 94
+        }
+    },
+    {
+        "student_id": "S106",
+        "name": "Frank Miller",
+        "scores": {
+            "Math": -5,
+            "Science": 60,
+            "English": 70
+        }
+    },
+    {
+        "student_id": "S107",
+        "name": "George Adams",
+        "scores": {
+            "Math": 85,
+            "Science": "90",  
+            "English": 75
+        }
+    },
+    {
+        "student_id": "S101",  
+        "name": "Duplicate Student",
+        "scores": {
+            "Math": 80,
+            "Science": 78,
+            "English": 82
+        }
+    },
+    {
+        "student_id": "S108",
+        "name": "Helen Parker",
+        "scores": {}  
+    },
+    {
+        "student_id": "S109",
+        "name": "Ivy@Stone",
+        "scores": {
+            "Math": 70,
+            "Science": 65,
+            "English": 60
+        }
+    },
+    {
+        "student_id": null,
+        "name": "No ID Student",
+        "scores": {
+            "Math": 50,
+            "Science": 55,
+            "English": 60
+        }
+    }
+]

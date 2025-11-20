@@ -1,0 +1,112 @@
+[
+    {
+        "student_id": "S101",
+        "name": "Alice Johnson",
+        "scores": {
+            "Math": 92,
+            "Science": 88,
+            "English": 95,
+            "History": 85,
+            "Geography": 90
+        }
+    },
+    {
+        "student_id": "S102",
+        "name": "Brian Smith",
+        "scores": {
+            "Math": 45,
+            "Science": 52,
+            "English": 48,
+            "History": 39,
+            "Geography": 50
+        }
+    },
+    {
+        "student_id": "S103",
+        "name": "Catherine Lee",
+        "scores": {
+            "Math": 88,
+            "Science": 91,
+            "English": 87,
+            "History": 90,
+            "Geography": 85
+        }
+    },
+    {
+        "student_id": "S104",
+        "name": "David Kumar",
+        "scores": {
+            "Math": 33,
+            "Science": 40,
+            "English": 28,
+            "History": 36,
+            "Geography": 41
+        }
+    },
+    {
+        "student_id": "S105",
+        "name": "Emma Wilson",
+        "scores": {
+            "Math": 72,
+            "Science": 65,
+            "English": 70,
+            "History": 55,
+            "Geography": 68
+        }
+    },
+    {
+        "student_id": "S106",
+        "name": "Franklin Davis",
+        "scores": {
+            "Math": 95,
+            "Science": 82,
+            "English": 91,
+            "History": 88,
+            "Geography": 93
+        }
+    },
+    {
+        "student_id": "S107",
+        "name": "Grace Martinez",
+        "scores": {
+            "Math": 22,
+            "Science": 30,
+            "English": 25,
+            "History": 20,
+            "Geography": 27
+        }
+    },
+    {
+        "student_id": "S108",
+        "name": "Henry Thompson",
+        "scores": {
+            "Math": 68,
+            "Science": 60,
+            "English": 72,
+            "History": 65,
+            "Geography": 58
+        }
+    },
+    {
+        "student_id": "S109",
+        "name": "Isabella Clark",
+        "scores": {
+            "Math": 100,
+            "Science": 98,
+            "English": 96,
+            "History": 99,
+            "Geography": 97
+        }
+    },
+    {
+        "student_id": "S110",
+        "name": "Jack Robinson",
+        "scores": {
+            "Math": 40,
+            "Science": 55,
+            "English": 48,
+            "History": 52,
+            "Geography": 45
+        }
+    }
+]
