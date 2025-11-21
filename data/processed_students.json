@@ -1,0 +1,152 @@
+[
+  {
+    "student_id": "S109",
+    "name": "Isabella Clark",
+    "scores": {
+      "Math": { "score": 100, "grade": "A" },
+      "Science": { "score": 98, "grade": "A" },
+      "English": { "score": 96, "grade": "A" },
+      "History": { "score": 99, "grade": "A" },
+      "Geography": { "score": 97, "grade": "A" }
+    },
+    "total": 490,
+    "percentage": 98.0,
+    "grade": "A",
+    "rank": 1
+  },
+  {
+    "student_id": "S101",
+    "name": "Alice Johnson",
+    "scores": {
+      "Math": { "score": 92, "grade": "A" },
+      "Science": { "score": 88, "grade": "B" },
+      "English": { "score": 95, "grade": "A" },
+      "History": { "score": 85, "grade": "B" },
+      "Geography": { "score": 90, "grade": "A" }
+    },
+    "total": 450,
+    "percentage": 90.0,
+    "grade": "A",
+    "rank": 2
+  },
+  {
+    "student_id": "S106",
+    "name": "Franklin Davis",
+    "scores": {
+      "Math": { "score": 95, "grade": "A" },
+      "Science": { "score": 82, "grade": "B" },
+      "English": { "score": 91, "grade": "A" },
+      "History": { "score": 88, "grade": "B" },
+      "Geography": { "score": 93, "grade": "A" }
+    },
+    "total": 449,
+    "percentage": 89.8,
+    "grade": "B",
+    "rank": 3
+  },
+  {
+    "student_id": "S103",
+    "name": "Catherine Lee",
+    "scores": {
+      "Math": { "score": 88, "grade": "B" },
+      "Science": { "score": 91, "grade": "A" },
+      "English": { "score": 87, "grade": "B" },
+      "History": { "score": 90, "grade": "A" },
+      "Geography": { "score": 85, "grade": "B" }
+    },
+    "total": 441,
+    "percentage": 88.2,
+    "grade": "B",
+    "rank": 4
+  },
+  {
+    "student_id": "S105",
+    "name": "Emma Wilson",
+    "scores": {
+      "Math": { "score": 72, "grade": "C" },
+      "Science": { "score": 65, "grade": "D" },
+      "English": { "score": 70, "grade": "C" },
+      "History": { "score": 55, "grade": "F" },
+      "Geography": { "score": 68, "grade": "D" }
+    },
+    "total": 330,
+    "percentage": 66.0,
+    "grade": "D",
+    "rank": 5
+  },
+  {
+    "student_id": "S108",
+    "name": "Henry Thompson",
+    "scores": {
+      "Math": { "score": 68, "grade": "D" },
+      "Science": { "score": 60, "grade": "D" },
+      "English": { "score": 72, "grade": "C" },
+      "History": { "score": 65, "grade": "D" },
+      "Geography": { "score": 58, "grade": "F" }
+    },
+    "total": 323,
+    "percentage": 64.6,
+    "grade": "D",
+    "rank": 6
+  },
+  {
+    "student_id": "S110",
+    "name": "Jack Robinson",
+    "scores": {
+      "Math": { "score": 40, "grade": "F" },
+      "Science": { "score": 55, "grade": "F" },
+      "English": { "score": 48, "grade": "F" },
+      "History": { "score": 52, "grade": "F" },
+      "Geography": { "score": 45, "grade": "F" }
+    },
+    "total": 240,
+    "percentage": 48.0,
+    "grade": "F",
+    "rank": 7
+  },
+  {
+    "student_id": "S102",
+    "name": "Brian Smith",
+    "scores": {
+      "Math": { "score": 45, "grade": "F" },
+      "Science": { "score": 52, "grade": "F" },
+      "English": { "score": 48, "grade": "F" },
+      "History": { "score": 39, "grade": "F" },
+      "Geography": { "score": 50, "grade": "F" }
+    },
+    "total": 234,
+    "percentage": 46.8,
+    "grade": "F",
+    "rank": 8
+  },
+  {
+    "student_id": "S104",
+    "name": "David Kumar",
+    "scores": {
+      "Math": { "score": 33, "grade": "F" },
+      "Science": { "score": 40, "grade": "F" },
+      "English": { "score": 28, "grade": "F" },
+      "History": { "score": 36, "grade": "F" },
+      "Geography": { "score": 41, "grade": "F" }
+    },
+    "total": 178,
+    "percentage": 35.6,
+    "grade": "F",
+    "rank": 9
+  },
+  {
+    "student_id": "S107",
+    "name": "Grace Martinez",
+    "scores": {
+      "Math": { "score": 22, "grade": "F" },
+      "Science": { "score": 30, "grade": "F" },
+      "English": { "score": 25, "grade": "F" },
+      "History": { "score": 20, "grade": "F" },
+      "Geography": { "score": 27, "grade": "F" }
+    },
+    "total": 124,
+    "percentage": 24.8,
+    "grade": "F",
+    "rank": 10
+  }
+]

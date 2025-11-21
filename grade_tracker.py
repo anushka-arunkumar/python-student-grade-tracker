@@ -1,6 +1,9 @@
 import json
 import re
+import pprint
+import statistics
 from tabulate import tabulate
+from collections import Counter
 
 GRADE_RANGES = {
     "A": (90, 101),
@@ -15,8 +18,8 @@ SUBJECTS = ["Math", "Science", "English", "History", "Geography"]
 
 def get_students():
     try:
-        # with open("data/students.json", "r") as file:
-        with open("data/invalid_student_data.json", "r") as file:
+        with open("data/students.json", "r") as file:
+            # with open("data/invalid_student_data.json", "r") as file:
             return validate_student(json.load(file))
     except FileNotFoundError:
         print(f"Error: students.json not found")
@@ -130,34 +133,195 @@ def get_rank(processed_students):
         student["rank"] = index + 1
     return students_sorted_by_percentage
 
+def view_all_students():
+    pass
 
-def generate_report_card(processed_students):
+
+def generate_report_card(student_id, processed_students):
+
+    student = find_by_student_id(student_id, processed_students)
+    if not student:
+        print(f"Student with id {student_id} not found")
+        return
+
     headers = ["Subject", "Marks", "Grade"]
-    for student in processed_students:
-        data = []
-        with open(
-            f"report_cards/{student['student_id']}_{student['name'].replace(' ', '_')}.txt",
-            "w",
-        ) as file_obj:
-            file_obj.write("=== Student Report Card ===\n\n")
-            file_obj.write(f"Student ID: {student['student_id']}\n")
-            file_obj.write(f"Name: {student['name']}\n\n")
-            for subject, score in student["scores"].items():
-                data.append([subject, score["score"], score["grade"]])
-            file_obj.write(
-                tabulate(
-                    data,
-                    headers=headers,
-                    tablefmt="grid",
-                    numalign="center",
-                    stralign="center",
-                )
+    data = []
+    with open(
+        f"report_cards/{student['student_id']}_{student['name'].replace(' ', '_')}.txt",
+        "w",
+    ) as file_obj:
+        file_obj.write("=== Student Report Card ===\n\n")
+        file_obj.write(f"Student ID: {student['student_id']}\n")
+        file_obj.write(f"Name: {student['name']}\n\n")
+        for subject, score in student["scores"].items():
+            data.append([subject, score["score"], score["grade"]])
+        file_obj.write(
+            tabulate(
+                data,
+                headers=headers,
+                tablefmt="grid",
+                numalign="center",
+                stralign="center",
             )
-            file_obj.write(f"\n\nTotal: {student['total']}/500\n")
-            file_obj.write(f"Percentage: {student['percentage']:.2f}%\n")
-            file_obj.write(f"Grade: {student['grade']}\n")
-            file_obj.write(f"Rank: {student['rank']}/{len(processed_students)}")
-        print(f"report card generated for student_id {student['student_id']}")
+        )
+        file_obj.write(f"\n\nTotal: {student['total']}/500\n")
+        file_obj.write(f"Percentage: {student['percentage']:.2f}%\n")
+        file_obj.write(f"Grade: {student['grade']}\n")
+        file_obj.write(f"Rank: {student['rank']}/{len(processed_students)}")
+    print(f"report card generated for student_id {student['student_id']}")
+
+
+def get_user_choice():
+    print("==== Features Menu ====\n")
+    print("1. Search student by ID")
+    print("2. Search student by name")
+    print("3. Filter by grade")
+    print("4. Show top N students")
+    print("5. Generate report card for individual student")
+    print("6. Class statistics\n")
+    return int(input("Choose an option: "))
+
+
+def advanced_features(user_choice, processed_students):
+    match user_choice:
+
+        case 1:
+            student_id = input("Enter a student id: ")
+            student = find_by_student_id(student_id, processed_students)
+            (
+                print(student)
+                if student
+                else print(f"Student with id {student_id} not found")
+            )
+
+        case 2:
+            name = input("Enter a name: ")
+            student = find_by_name(name, processed_students)
+            print(student) if student else print(f"Student with name {name} not found")
+
+        case 3:
+            while True:
+                grade = input("Enter the grade (A/B/C/D/F) to filter by: ").upper()
+                if grade not in ["A", "B", "C", "D", "F"]:
+                    print("Invalid grade entered")
+                    continue
+                else:
+                    break
+            filter_by_grade(grade, processed_students)
+
+        case 4:
+            while True:
+                n = int(
+                    input("Enter the number of top-ranked students you want to view: ")
+                )
+                if n not in range(1, len(processed_students) + 1):
+                    print("Invalid input entered")
+                    print(f"Enter a number between 1 to {len(processed_students)}")
+                else:
+                    break
+            get_top_n_students(n, processed_students)
+
+        case 5:
+            student_id = input("Enter student id for generating report card: ")
+            generate_report_card(student_id, processed_students)
+
+        case 6:
+            get_class_statistics(processed_students)
+
+        case _:
+            print("Invalid choice")
+
+
+def find_by_student_id(student_id, processed_students):
+    return next(
+        (
+            student
+            for student in processed_students
+            if student["student_id"] == student_id
+        ),
+        None,
+    )
+
+
+def find_by_name(name, processed_students):
+    return next(
+        (student for student in processed_students if student["name"] == name), None
+    )
+
+
+def get_top_n_students(n, processed_students):
+    for index in range(0, n):
+        pprint.pprint(processed_students[index])
+
+
+def filter_by_grade(grade, processed_students):
+    student_list = list(
+        filter(lambda student: student["grade"] == grade, processed_students)
+    )
+    if not student_list:
+        print(f"None of the students scored a {grade} grade")
+        return
+    pprint.pprint(student_list)
+
+
+def get_class_statistics(processed_students):
+
+    class_avg_percentage = get_class_avg_percentage(processed_students)
+    pass_cnt, fail_cnt = get_pass_fail_counts(processed_students)
+    grade_distribution = get_grade_distribution(processed_students)
+
+    print("==== Class Statistics ====\n")
+    print(f"Class average percentage: {class_avg_percentage}\n")
+
+    cnt_header = ["Result", "Count"]
+    cnt_data = [["Pass", pass_cnt], ["Fail", fail_cnt]]
+    print("Pass/Fail Count:")
+    print(
+        tabulate(
+            cnt_data,
+            headers=cnt_header,
+            tablefmt="grid",
+            stralign="center",
+            numalign="center",
+        ),
+        "\n",
+    )
+
+    grd_header = ["Grade", "Count"]
+    grd_data = []
+    for grade, cnt in grade_distribution.items():
+        grd_data.append([grade, cnt])
+    print("Grade Distribution:")
+    print(
+        tabulate(
+            grd_data,
+            headers=grd_header,
+            tablefmt="grid",
+            stralign="center",
+            numalign="center",
+        )
+    )
+
+
+def get_class_avg_percentage(processed_students):
+    percentage_list = [student["percentage"] for student in processed_students]
+    return round(statistics.mean(percentage_list), 2)
+
+
+def get_pass_fail_counts(processed_students):
+    # pass/fail count (passing: 40% in each subject and 50% overall)
+    pass_cnt = sum(
+        1
+        for student in processed_students
+        if student["percentage"] >= 50
+        and all(score["score"] >= 40 for score in student["scores"].values())
+    )
+    fail_cnt = len(processed_students) - pass_cnt
+    return pass_cnt, fail_cnt
+
+
+def get_grade_distribution(processed_students):
+    return Counter(student["grade"] for student in processed_students)
 
 
 students_list = get_students()
@@ -165,5 +329,8 @@ if not students_list:
     print("Student data is not available for processing")
 else:
     processed_students = calculate_metrics(students_list)
-    generate_report_card(processed_students)
-    print(students_list)
+    # wrt a fun to view all students
+    # print(processed_students)
+
+    user_choice = get_user_choice()
+    advanced_features(user_choice, processed_students)
