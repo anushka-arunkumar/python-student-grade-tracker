@@ -133,8 +133,11 @@ def get_rank(processed_students):
         student["rank"] = index + 1
     return students_sorted_by_percentage
 
-def view_all_students():
-    pass
+
+def view_all_students(processed_students):
+    print("\n==== ALL STUDENTS ====\n")
+    for student in processed_students:
+        pprint.pprint(student)
 
 
 def generate_report_card(student_id, processed_students):
@@ -178,8 +181,14 @@ def get_user_choice():
     print("3. Filter by grade")
     print("4. Show top N students")
     print("5. Generate report card for individual student")
-    print("6. Class statistics\n")
-    return int(input("Choose an option: "))
+    print("6. Class statistics")
+    print("7. Subject wise analysis")
+    print("8. View all students\n")
+    while True:
+        choice = input("Choose an option: ")
+        if choice.isdigit() and 1 <= int(choice) <= 8:
+            return int(choice)
+        print("Invalid input. Please enter a number between 1 and 8.")
 
 
 def advanced_features(user_choice, processed_students):
@@ -202,24 +211,20 @@ def advanced_features(user_choice, processed_students):
         case 3:
             while True:
                 grade = input("Enter the grade (A/B/C/D/F) to filter by: ").upper()
-                if grade not in ["A", "B", "C", "D", "F"]:
-                    print("Invalid grade entered")
-                    continue
-                else:
+                if grade in ["A", "B", "C", "D", "F"]:
                     break
+                print("Invalid grade")
             filter_by_grade(grade, processed_students)
 
         case 4:
             while True:
-                n = int(
-                    input("Enter the number of top-ranked students you want to view: ")
-                )
-                if n not in range(1, len(processed_students) + 1):
-                    print("Invalid input entered")
-                    print(f"Enter a number between 1 to {len(processed_students)}")
-                else:
+                n = input("Enter the number of top-ranked students you want to view: ")
+                if n.isdigit() and int(n) in range(1, len(processed_students) + 1):
                     break
-            get_top_n_students(n, processed_students)
+                print(
+                    f"Invalid input. Enter a number between 1 to {len(processed_students)}"
+                )
+            get_top_n_students(int(n), processed_students)
 
         case 5:
             student_id = input("Enter student id for generating report card: ")
@@ -228,8 +233,14 @@ def advanced_features(user_choice, processed_students):
         case 6:
             get_class_statistics(processed_students)
 
+        case 7:
+            subject_wise_analysis(processed_students)
+
+        case 8:
+            view_all_students(processed_students)
+
         case _:
-            print("Invalid choice")
+            print("Invalid choice. Enter a number between 1 to 8")
 
 
 def find_by_student_id(student_id, processed_students):
@@ -245,13 +256,18 @@ def find_by_student_id(student_id, processed_students):
 
 def find_by_name(name, processed_students):
     return next(
-        (student for student in processed_students if student["name"] == name), None
+        (
+            student
+            for student in processed_students
+            if student["name"].lower() == name.lower()
+        ),
+        None,
     )
 
 
 def get_top_n_students(n, processed_students):
-    for index in range(0, n):
-        pprint.pprint(processed_students[index])
+    for student in processed_students[:n]:
+        pprint.pprint(student)
 
 
 def filter_by_grade(grade, processed_students):
@@ -271,7 +287,7 @@ def get_class_statistics(processed_students):
     grade_distribution = get_grade_distribution(processed_students)
 
     print("==== Class Statistics ====\n")
-    print(f"Class average percentage: {class_avg_percentage}\n")
+    print(f"Class average percentage: {class_avg_percentage:.2f}%\n")
 
     cnt_header = ["Result", "Count"]
     cnt_data = [["Pass", pass_cnt], ["Fail", fail_cnt]]
@@ -324,13 +340,76 @@ def get_grade_distribution(processed_students):
     return Counter(student["grade"] for student in processed_students)
 
 
+def subject_wise_analysis(processed_students):
+    print("\n==== Subject Wise Analysis ====\n")
+
+    print("Average score for each subject: \n")
+    pprint.pprint(get_per_subject_avg(processed_students))
+    print()
+
+    print("Highest and lowest score per subject: \n")
+    pprint.pprint(get_min_max_score_per_sub(processed_students))
+    print()
+
+
+# Subject with best class performance
+
+
+def get_per_subject_avg(processed_students):
+    per_sub_avg = {}
+    for subject in SUBJECTS:
+        scores_list = [
+            student["scores"][subject]["score"] for student in processed_students
+        ]
+        per_sub_avg[subject] = round(statistics.mean(scores_list), 2)
+    return per_sub_avg
+
+
+def get_min_max_score_per_sub(processed_students):
+    min_max_scores = {}
+    for subject in SUBJECTS:
+        scores = [student["scores"][subject]["score"] for student in processed_students]
+        min_max_scores[subject] = {
+            "min_score": min(scores),
+            "min_scorer": [
+                s["name"]
+                for s in processed_students
+                if s["scores"][subject]["score"] == min(scores)
+            ],
+            "max_score": max(scores),
+            "max_scorer": [
+                s["name"]
+                for s in processed_students
+                if s["scores"][subject]["score"] == max(scores)
+            ],
+        }
+    return min_max_scores
+
+
 students_list = get_students()
 if not students_list:
     print("Student data is not available for processing")
 else:
     processed_students = calculate_metrics(students_list)
-    # wrt a fun to view all students
-    # print(processed_students)
+    while True:
+        user_choice = get_user_choice()
+        advanced_features(user_choice, processed_students)
+        conti = input("Do you want to continue exploring ? (yes/no) ").lower()
+        if conti not in ["yes", "y"]:
+            break
 
-    user_choice = get_user_choice()
-    advanced_features(user_choice, processed_students)
+
+# Update Student
+
+# Create update_student() function
+# Find student by ID
+# Allow updating name and scores
+# Recalculate metrics after update
+
+# Delete Student
+
+# Create delete_student() function
+# Find student by ID
+# Ask for confirmation
+# Remove from list
+# Recalculate ranks
