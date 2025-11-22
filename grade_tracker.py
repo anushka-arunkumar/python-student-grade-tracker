@@ -351,8 +351,10 @@ def subject_wise_analysis(processed_students):
     pprint.pprint(get_min_max_score_per_sub(processed_students))
     print()
 
-
-# Subject with best class performance
+    print("Easiest subject (highest avg) and hardest subject (lowest avg): \n")
+    subjects = get_easiest_hardest_subject(processed_students)
+    pprint.pprint(subjects)
+    print()
 
 
 def get_per_subject_avg(processed_students):
@@ -369,21 +371,41 @@ def get_min_max_score_per_sub(processed_students):
     min_max_scores = {}
     for subject in SUBJECTS:
         scores = [student["scores"][subject]["score"] for student in processed_students]
+        min_score = min(scores)
+        max_score = max(scores)
         min_max_scores[subject] = {
-            "min_score": min(scores),
+            "min_score": min_score,
             "min_scorer": [
                 s["name"]
                 for s in processed_students
-                if s["scores"][subject]["score"] == min(scores)
+                if s["scores"][subject]["score"] == min_score
             ],
-            "max_score": max(scores),
+            "max_score": max_score,
             "max_scorer": [
                 s["name"]
                 for s in processed_students
-                if s["scores"][subject]["score"] == max(scores)
+                if s["scores"][subject]["score"] == max_score
             ],
         }
     return min_max_scores
+
+
+def get_easiest_hardest_subject(processed_students):
+
+    # Identify easiest subject (highest avg) and hardest subject (lowest avg)
+    subjects = {}
+    avg = get_per_subject_avg(processed_students)
+    easiest_subject = max(avg, key=avg.get)
+    hardest_subject = min(avg, key=avg.get)
+    subjects["easiest_subject"] = {
+        "subject": easiest_subject,
+        "average": avg[easiest_subject],
+    }
+    subjects["hardest_subject"] = {
+        "subject": hardest_subject,
+        "average": avg[hardest_subject],
+    }
+    return subjects
 
 
 students_list = get_students()

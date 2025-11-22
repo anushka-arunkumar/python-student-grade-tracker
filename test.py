@@ -6,13 +6,6 @@ from tabulate import tabulate
 with open("data/processed_students.json", "r") as file:
     processed_students = json.load(file)
 
-max_min_scores = {}
-for subject in ["Math", "Science", "English", "History", "Geography"]:
-    scores_list = [student["scores"][subject]["score"] for student in processed_students]
-    max_min_scores[subject] = {"max": max(scores_list), "min": min(scores_list)}
-
-print(max_min_scores)
-
 # print(Counter(student["grade"] for student in processed_students))
 
 # groups = defaultdict(list)
