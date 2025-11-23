@@ -2,6 +2,7 @@ import json
 import statistics
 from collections import defaultdict, Counter
 from tabulate import tabulate
+import pprint
 
 with open("data/processed_students.json", "r") as file:
     processed_students = json.load(file)

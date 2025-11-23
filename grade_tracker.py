@@ -183,15 +183,16 @@ def get_user_choice():
     print("5. Generate report card for individual student")
     print("6. Class statistics")
     print("7. Subject wise analysis")
-    print("8. View all students\n")
+    print("8. View all students")
+    print("9. Delete a student by ID\n")
     while True:
         choice = input("Choose an option: ")
-        if choice.isdigit() and 1 <= int(choice) <= 8:
+        if choice.isdigit() and 1 <= int(choice) <= 9:
             return int(choice)
-        print("Invalid input. Please enter a number between 1 and 8.")
+        print("Invalid input. Please enter a number between 1 and 9.")
 
 
-def advanced_features(user_choice, processed_students):
+def advanced_features(user_choice, processed_students, students_list):
     match user_choice:
 
         case 1:
@@ -202,11 +203,13 @@ def advanced_features(user_choice, processed_students):
                 if student
                 else print(f"Student with id {student_id} not found")
             )
+            return None, None
 
         case 2:
             name = input("Enter a name: ")
             student = find_by_name(name, processed_students)
             print(student) if student else print(f"Student with name {name} not found")
+            return None, None
 
         case 3:
             while True:
@@ -215,6 +218,7 @@ def advanced_features(user_choice, processed_students):
                     break
                 print("Invalid grade")
             filter_by_grade(grade, processed_students)
+            return None, None
 
         case 4:
             while True:
@@ -225,22 +229,35 @@ def advanced_features(user_choice, processed_students):
                     f"Invalid input. Enter a number between 1 to {len(processed_students)}"
                 )
             get_top_n_students(int(n), processed_students)
+            return None, None
 
         case 5:
             student_id = input("Enter student id for generating report card: ")
             generate_report_card(student_id, processed_students)
+            return None, None
 
         case 6:
             get_class_statistics(processed_students)
+            return None, None
 
         case 7:
             subject_wise_analysis(processed_students)
+            return None, None
 
         case 8:
             view_all_students(processed_students)
+            return None, None
+
+        case 9:
+            student_id = input("Enter a student id you want to delete: ")
+            if not find_by_student_id(student_id, processed_students):
+                print(f"Student with id {student_id} does not exist")
+                return None, None
+            return delete_student(student_id, students_list)
 
         case _:
-            print("Invalid choice. Enter a number between 1 to 8")
+            print("Invalid choice. Enter a number between 1 to 9")
+            return None, None
 
 
 def find_by_student_id(student_id, processed_students):
@@ -408,30 +425,48 @@ def get_easiest_hardest_subject(processed_students):
     return subjects
 
 
-students_list = get_students()
-if not students_list:
-    print("Student data is not available for processing")
-else:
-    processed_students = calculate_metrics(students_list)
-    while True:
-        user_choice = get_user_choice()
-        advanced_features(user_choice, processed_students)
-        conti = input("Do you want to continue exploring ? (yes/no) ").lower()
-        if conti not in ["yes", "y"]:
-            break
+def delete_student(student_id, students_list):
+    confirmation = input(
+        f"Do you really want to delete student with id {student_id} ? (yes/no) "
+    ).lower()
+    if confirmation not in ["yes", "y"]:
+        return None, None
+    updated_students_list = [
+        student for student in students_list if student["student_id"] != student_id
+    ]
+    updated_processed_students = calculate_metrics(updated_students_list)
+    print(f"\nTotal number of students before deletion: {len(students_list)}\n")
+    print(f"Student with id {student_id} was successfully deleted\n")
+    print(f"Total number of students post deletion: {len(updated_students_list)}\n")
+    return updated_students_list, updated_processed_students
 
 
+def main():
+    students_list = get_students()
+    if not students_list:
+        print("Student data is not available for processing")
+    else:
+        processed_students = calculate_metrics(students_list)
+        while True:
+            user_choice = get_user_choice()
+
+            updated_students_list, updated_processed_students = advanced_features(
+                user_choice, processed_students, students_list
+            )
+
+            if updated_students_list and updated_processed_students:
+                students_list = updated_students_list
+                processed_students = updated_processed_students
+
+            conti = input("Do you want to continue exploring ? (yes/no) ").lower()
+            if conti not in ["yes", "y"]:
+                break
+
+
+main()
 # Update Student
 
 # Create update_student() function
 # Find student by ID
 # Allow updating name and scores
 # Recalculate metrics after update
-
-# Delete Student
-
-# Create delete_student() function
-# Find student by ID
-# Ask for confirmation
-# Remove from list
-# Recalculate ranks
