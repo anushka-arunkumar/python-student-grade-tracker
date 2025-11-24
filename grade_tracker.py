@@ -33,17 +33,17 @@ def validate_student(student_list):
 
         student_id = student["student_id"]
         if student_id in valid_student_ids:
-            print(f"duplicate data received for student id {student_id}")
+            print(f"Duplicate data received for student ID {student_id}")
             continue
 
         is_id_valid = validate_id(student_id)
         if not is_id_valid:
-            print(f"invalid id received for student {student}")
+            print(f"Invalid ID received for student {student}")
             continue
 
         is_name_valid = validate_name(student["name"])
         if not is_name_valid:
-            print(f"invalid name received for student id {student['student_id']}")
+            print(f"Invalid name received for student {student['student_id']}")
             continue
 
         are_subjects_valid = validate_subjects(student["scores"])
@@ -52,7 +52,7 @@ def validate_student(student_list):
 
         are_scores_valid = validate_scores(student["scores"])
         if not are_scores_valid:
-            print(f"invalid score/s received for student id {student['student_id']}")
+            print(f"Invalid score/s received for student {student['student_id']}")
             continue
 
         valid_student_data.append(student)
@@ -75,10 +75,10 @@ def validate_name(name):
 
 def validate_subjects(scores_dict):
     if len(scores_dict) != len(SUBJECTS):
-        print("incorrect number of subjects")
+        print("Incorrect number of subjects")
         return False
     if set(scores_dict.keys()) != set(SUBJECTS):
-        print("missing or extra subjects")
+        print("Missing or extra subjects")
         return False
     return True
 
@@ -144,7 +144,7 @@ def generate_report_card(student_id, processed_students):
 
     student = find_by_student_id(student_id, processed_students)
     if not student:
-        print(f"Student with id {student_id} not found")
+        print(f"Student {student_id} not found")
         return
 
     headers = ["Subject", "Marks", "Grade"]
@@ -171,7 +171,7 @@ def generate_report_card(student_id, processed_students):
         file_obj.write(f"Percentage: {student['percentage']:.2f}%\n")
         file_obj.write(f"Grade: {student['grade']}\n")
         file_obj.write(f"Rank: {student['rank']}/{len(processed_students)}")
-    print(f"report card generated for student_id {student['student_id']}")
+    print(f"Report card generated for student {student['student_id']}")
 
 
 def get_user_choice():
@@ -197,13 +197,9 @@ def advanced_features(user_choice, processed_students, students_list):
     match user_choice:
 
         case 1:
-            student_id = input("Enter a student id: ")
+            student_id = input("Enter student ID: ")
             student = find_by_student_id(student_id, processed_students)
-            (
-                print(student)
-                if student
-                else print(f"Student with id {student_id} not found")
-            )
+            (print(student) if student else print(f"Student {student_id} not found"))
             return None, None
 
         case 2:
@@ -233,7 +229,7 @@ def advanced_features(user_choice, processed_students, students_list):
             return None, None
 
         case 5:
-            student_id = input("Enter student id for generating report card: ")
+            student_id = input("Enter student ID for generating report card: ")
             generate_report_card(student_id, processed_students)
             return None, None
 
@@ -435,7 +431,7 @@ def get_easiest_hardest_subject(processed_students):
 
 def delete_student(student_id, students_list):
     confirmation = input(
-        f"Do you really want to delete student with id {student_id} ? (yes/no) "
+        f"Do you really want to delete student {student_id} ? (yes/no) "
     ).lower()
     if confirmation not in ["yes", "y"]:
         return None, None
@@ -444,7 +440,7 @@ def delete_student(student_id, students_list):
     ]
     updated_processed_students = calculate_metrics(updated_students_list)
     print(f"\nTotal number of students before deletion: {len(students_list)}\n")
-    print(f"Student with id {student_id} was successfully deleted\n")
+    print(f"Student {student_id} was successfully deleted\n")
     print(f"Total number of students post deletion: {len(updated_students_list)}\n")
     return updated_students_list, updated_processed_students
 
@@ -500,28 +496,40 @@ def get_updated_details(student):
     }
     changes = {}
 
-    new_name = input(
-        f"Enter new name (press Enter to keep '{student["name"]}'): "
-    ).strip()
+    while True:
+        new_name = input(
+            f"Enter new name (press Enter to keep '{student["name"]}'): "
+        ).strip()
 
-    if new_name:
-        updated_student["name"] = new_name
-        changes["name"] = {"old": student["name"], "new": new_name}
+        if not new_name:
+            break
+        if validate_name(new_name):
+            updated_student["name"] = new_name
+            changes["name"] = {"old": student["name"], "new": new_name}
+            break
+        print("Invalid name. Please try again")
 
     for subject in SUBJECTS:
         old_score = student["scores"][subject]
-        new_score = input(
-            f"Enter new {subject} score (press Enter to keep {old_score}):"
-        ).strip()
 
-        if new_score:
-            updated_student["scores"][subject] = int(new_score)
-            changes[subject] = {
-                "old": old_score,
-                "new": new_score,
-            }
-        else:
-            updated_student["scores"][subject] = old_score
+        while True:
+            new_score = input(
+                f"Enter new {subject} score (press Enter to keep {old_score}):"
+            ).strip()
+
+            if new_score:
+                if validate_score(new_score):
+                    updated_student["scores"][subject] = int(new_score)
+                    changes[subject] = {
+                        "old": old_score,
+                        "new": int(new_score),
+                    }
+                    break
+                else:
+                    print("Invalid score. Please try again")
+            else:
+                updated_student["scores"][subject] = old_score
+                break
 
     return updated_student, changes
 
