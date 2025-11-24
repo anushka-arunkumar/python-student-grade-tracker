@@ -175,7 +175,7 @@ def generate_report_card(student_id, processed_students):
 
 
 def get_user_choice():
-    print("==== Features Menu ====\n")
+    print("\n==== Features Menu ====\n")
     print("1. Search student by ID")
     print("2. Search student by name")
     print("3. Filter by grade")
@@ -184,12 +184,13 @@ def get_user_choice():
     print("6. Class statistics")
     print("7. Subject wise analysis")
     print("8. View all students")
-    print("9. Delete a student by ID\n")
+    print("9. Update student by ID")
+    print("10. Delete student by ID\n")
     while True:
         choice = input("Choose an option: ")
-        if choice.isdigit() and 1 <= int(choice) <= 9:
+        if choice.isdigit() and 1 <= int(choice) <= 10:
             return int(choice)
-        print("Invalid input. Please enter a number between 1 and 9.")
+        print("Invalid input. Please enter a number between 1 and 10.")
 
 
 def advanced_features(user_choice, processed_students, students_list):
@@ -249,14 +250,21 @@ def advanced_features(user_choice, processed_students, students_list):
             return None, None
 
         case 9:
-            student_id = input("Enter a student id you want to delete: ")
+            student_id = input("Enter the Student ID you want to update: ")
             if not find_by_student_id(student_id, processed_students):
-                print(f"Student with id {student_id} does not exist")
+                print(f"Student ID {student_id} not found. Please try again")
+                return None, None
+            return update_student(student_id, students_list)
+
+        case 10:
+            student_id = input("Enter the Student ID you want to delete: ")
+            if not find_by_student_id(student_id, processed_students):
+                print(f"Student ID {student_id} not found. Please try again")
                 return None, None
             return delete_student(student_id, students_list)
 
         case _:
-            print("Invalid choice. Enter a number between 1 to 9")
+            print("Invalid choice. Enter a number between 1 to 10")
             return None, None
 
 
@@ -441,6 +449,87 @@ def delete_student(student_id, students_list):
     return updated_students_list, updated_processed_students
 
 
+def update_student(student_id, students_list):
+    index = next(
+        index
+        for index, student in enumerate(students_list)
+        if student["student_id"] == student_id
+    )
+    student_to_update = students_list[index]
+
+    view_student(student_to_update)
+
+    updated_student, changes = get_updated_details(student_to_update)
+
+    if changes:
+        print("\nYou are about to update the following fields:\n")
+        for field in changes:
+            old_val = changes[field]["old"]
+            new_val = changes[field]["new"]
+            print(f"{field}: {old_val} -> {new_val}")
+    else:
+        print("\nNo changes detected. Nothing to update.")
+        return None, None
+
+    confirm = input("\nConfirm update? (y/n): ").lower()
+    if confirm not in ["yes", "y"]:
+        print("Update cancelled")
+        return None, None
+    students_list[index] = updated_student
+    print(f"\nStudent {student_id} updated successfully!")
+    print("Recalculating metrics....")
+
+    updated_processed_students = calculate_metrics(students_list)
+    print("Update complete!")
+
+    return students_list, updated_processed_students
+
+
+def view_student(student):
+    print(f"\nCurrent details for student {student['student_id']}:")
+    print(f"Name: {student['name']}")
+    for subject in SUBJECTS:
+        print(f"{subject}: {student['scores'][subject]}")
+
+
+def get_updated_details(student):
+    updated_student = {
+        "student_id": student["student_id"],
+        "name": student["name"],
+        "scores": {},
+    }
+    changes = {}
+
+    new_name = input(
+        f"Enter new name (press Enter to keep '{student["name"]}'): "
+    ).strip()
+
+    if new_name:
+        updated_student["name"] = new_name
+        changes["name"] = {"old": student["name"], "new": new_name}
+
+    for subject in SUBJECTS:
+        old_score = student["scores"][subject]
+        new_score = input(
+            f"Enter new {subject} score (press Enter to keep {old_score}):"
+        ).strip()
+
+        if new_score:
+            updated_student["scores"][subject] = int(new_score)
+            changes[subject] = {
+                "old": old_score,
+                "new": new_score,
+            }
+        else:
+            updated_student["scores"][subject] = old_score
+
+    return updated_student, changes
+
+
+def validate_score(score):
+    return score.isdigit() and 0 <= int(score) <= 100
+
+
 def main():
     students_list = get_students()
     if not students_list:
@@ -464,9 +553,3 @@ def main():
 
 
 main()
-# Update Student
-
-# Create update_student() function
-# Find student by ID
-# Allow updating name and scores
-# Recalculate metrics after update

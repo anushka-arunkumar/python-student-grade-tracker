@@ -7,6 +7,9 @@ import pprint
 with open("data/processed_students.json", "r") as file:
     processed_students = json.load(file)
 
+name = input(f"Enter new name (press Enter to keep 'ABCD'): ")
+print(name) if name else print("no input")
+
 # print(Counter(student["grade"] for student in processed_students))
 
 # groups = defaultdict(list)
