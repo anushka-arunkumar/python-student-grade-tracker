@@ -5,10 +5,38 @@ from services.statistics_service import (
     get_grade_distribution,
     get_min_max_score_per_sub,
     get_per_subject_avg,
-    get_easiest_hardest_subject
+    get_easiest_hardest_subject,
 )
 from pprint import pprint
 from tabulate import tabulate
+
+
+def show_student_search_result(student, student_id):
+    if student:
+        print("\n=== Student Found ===\n")
+        pprint(student)
+    else:
+        print(f"\nStudent with ID '{student_id}' not found")
+
+
+def show_student_search_by_name(student, student_name):
+    if student:
+        print("\n=== Student Found ===\n")
+        pprint(student)
+    else:
+        print(f"\nStudent with name '{student_name}' not found")
+
+
+def show_students_by_grade(students, grade):
+    print(f"\n=== Students with Grade '{grade}' ===\n")
+
+    if not students:
+        print(f"Students with grade {grade} not found\n")
+        return
+
+    for student in students:
+        pprint(student)
+    print()
 
 
 def show_student(student):

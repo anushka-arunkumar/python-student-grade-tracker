@@ -37,22 +37,23 @@ def advanced_features(user_choice, processed_students, students_list):
         case 1:
             student_id = input("Enter student ID: ")
             student = find_by_student_id(student_id, processed_students)
-            (print(student) if student else print(f"Student {student_id} not found"))
+            show_student_search_result(student, student_id)
             return None, None
 
         case 2:
-            name = input("Enter a name: ")
+            name = input("Enter student name: ")
             student = find_by_name(name, processed_students)
-            print(student) if student else print(f"Student with name {name} not found")
+            show_student_search_by_name(student, name)
             return None, None
 
         case 3:
-            while True:
-                grade = input("Enter the grade (A/B/C/D/F) to filter by: ").upper()
-                if grade in ["A", "B", "C", "D", "F"]:
-                    break
+            grade = input("Enter the grade (A/B/C/D/F) to filter by: ").upper()
+            if grade not in ["A", "B", "C", "D", "F"]:
                 print("Invalid grade")
-            filter_by_grade(grade, processed_students)
+                return None, None
+
+            students = filter_by_grade(grade, processed_students)
+            show_students_by_grade(students, grade)
             return None, None
 
         case 4:
