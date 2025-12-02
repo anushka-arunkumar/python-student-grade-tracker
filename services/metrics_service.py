@@ -1,4 +1,4 @@
-from utils.helpers import GRADE_RANGES
+from utils.config import GRADE_RANGES, TOTAL_SUBJECTS
 
 
 def calculate_metrics(student_list):
@@ -6,7 +6,7 @@ def calculate_metrics(student_list):
     for student in student_list:
 
         total = sum(student["scores"].values())
-        percentage = total / 5
+        percentage = total / TOTAL_SUBJECTS
 
         # this is a dictionary comprehension
         # it creates a new dictionary by looping over the scores dictionary

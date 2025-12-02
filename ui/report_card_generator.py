@@ -1,36 +1,50 @@
-from services.student_service import find_by_student_id
+import os
 from tabulate import tabulate
+from services.student_service import find_by_student_id
 
 
 def generate_report_card(student_id, processed_students):
 
     student = find_by_student_id(student_id, processed_students)
+
     if not student:
-        print(f"Student {student_id} not found")
+        print(f"\nStudent '{student_id}' not found. Cannot generate report card.\n")
         return
 
-    headers = ["Subject", "Marks", "Grade"]
-    data = []
-    with open(
-        f"data/report_cards/{student['student_id']}_{student['name'].replace(' ', '_')}.txt",
-        "w",
-    ) as file_obj:
-        file_obj.write("=== Student Report Card ===\n\n")
-        file_obj.write(f"Student ID: {student['student_id']}\n")
-        file_obj.write(f"Name: {student['name']}\n\n")
-        for subject, score in student["scores"].items():
-            data.append([subject, score["score"], score["grade"]])
-        file_obj.write(
+    base_dir = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "data", "report_cards"
+    )
+    os.makedirs(base_dir, exist_ok=True)
+    file_path = os.path.join(
+        base_dir,
+        f"{student["student_id"]}_{student["name"].replace(" ", "_")}.txt",
+    )
+
+    table_data = [
+        [subject, details["score"], details["grade"]]
+        for subject, details in student["scores"].items()
+    ]
+
+    summary_text = (
+        f"Report Card for {student['name']} ({student['student_id']})\n\n"
+        f"Total Score: {student['total']}\n"
+        f"Percentage: {student['percentage']}\n"
+        f"Final Grade: {student['grade']}\n"
+        f"Class Rank: {student['rank']}\n"
+    )
+
+    with open(file_path, "w") as file:
+        file.write(summary_text)
+        file.write("\nSubject Scores:\n\n")
+        file.write(
             tabulate(
-                data,
-                headers=headers,
+                table_data,
+                headers=["Subject", "Score", "Grade"],
                 tablefmt="grid",
                 numalign="center",
                 stralign="center",
             )
         )
-        file_obj.write(f"\n\nTotal: {student['total']}/500\n")
-        file_obj.write(f"Percentage: {student['percentage']:.2f}%\n")
-        file_obj.write(f"Grade: {student['grade']}\n")
-        file_obj.write(f"Rank: {student['rank']}/{len(processed_students)}")
-    print(f"Report card generated for student {student['student_id']}")
+
+    print(f"\nReport card generated successfully:")
+    print(f"File: {file_path}\n")

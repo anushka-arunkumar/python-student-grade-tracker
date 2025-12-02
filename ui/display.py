@@ -1,14 +1,5 @@
-from utils.helpers import SUBJECTS
-from services.statistics_service import (
-    get_class_avg_percentage,
-    get_pass_fail_counts,
-    get_grade_distribution,
-    get_min_max_score_per_sub,
-    get_per_subject_avg,
-    get_easiest_hardest_subject,
-)
+from utils.config import SUBJECTS
 from pprint import pprint
-from tabulate import tabulate
 
 
 def show_student_search_result(student, student_id):
@@ -39,6 +30,17 @@ def show_students_by_grade(students, grade):
     print()
 
 
+def show_top_n_students(students, n):
+    if not students:
+        print(f"\nNo results. Unable to show top {n} students.\n")
+        return
+
+    print(f"\n=== Top {n} Students ===\n")
+    for student in students:
+        pprint(student)
+        print()
+
+
 def show_student(student):
     print(f"\nCurrent details for student {student['student_id']}:")
     print(f"Name: {student['name']}")
@@ -53,56 +55,55 @@ def show_students_list(students):
 
 
 def show_class_statistics(stats):
+    print("\n======= CLASS STATISTICS =======\n")
+    print(f"Class Average Percentage : {stats["average_percentage"]}%")
+    print(f"Pass Count               : {stats["pass_count"]}")
+    print(f"Fail Count               : {stats["fail_count"]}")
+    print("\nGrade Distribution:")
 
-    class_avg_percentage = get_class_avg_percentage(stats)
-    pass_cnt, fail_cnt = get_pass_fail_counts(stats)
-    grade_distribution = get_grade_distribution(stats)
+    for grade, count in stats["grade_distribution"].items():
+        print(f"  {grade} : {count}")
 
-    print("==== Class Statistics ====\n")
-    print(f"Class average percentage: {class_avg_percentage:.2f}%\n")
-
-    cnt_header = ["Result", "Count"]
-    cnt_data = [["Pass", pass_cnt], ["Fail", fail_cnt]]
-    print("Pass/Fail Count:")
-    print(
-        tabulate(
-            cnt_data,
-            headers=cnt_header,
-            tablefmt="grid",
-            stralign="center",
-            numalign="center",
-        ),
-        "\n",
-    )
-
-    grd_header = ["Grade", "Count"]
-    grd_data = []
-    for grade, cnt in grade_distribution.items():
-        grd_data.append([grade, cnt])
-    print("Grade Distribution:")
-    print(
-        tabulate(
-            grd_data,
-            headers=grd_header,
-            tablefmt="grid",
-            stralign="center",
-            numalign="center",
-        )
-    )
-
-
-def show_subject_analysis(data):
-    print("\n==== Subject Wise Analysis ====\n")
-
-    print("Average score for each subject: \n")
-    pprint(get_per_subject_avg(data))
     print()
 
-    print("Highest and lowest score per subject: \n")
-    pprint(get_min_max_score_per_sub(data))
+
+def show_subject_averages(averages):
+    print("\n==== Subject-wise Averages ====\n")
+    for subject, average in averages.items():
+        print(f"{subject:12}: {average}")
     print()
 
-    print("Easiest subject (highest avg) and hardest subject (lowest avg): \n")
-    subjects = get_easiest_hardest_subject(data)
-    pprint(subjects)
+
+def show_subject_min_max(stats):
+    print("\n==== Subject Min/Max Scores ====\n")
+    for subject, min_max in stats.items():
+        print(f"{subject:12}: Min = {min_max['min']}, Max = {min_max['max']}")
     print()
+
+
+def show_easiest_hardest_subject(result):
+    print("\n==== Easiest / Hardest Subject ====\n")
+
+    easiest = result["easiest"]
+    hardest = result["hardest"]
+
+    print(f"Easiest Subject : {easiest['subject']} (Avg {easiest['average']})")
+    print(f"Hardest Subject : {hardest['subject']} (Avg {hardest['average']})")
+
+    print()
+
+
+def show_update_result(student, student_id):
+    if not student:
+        print(f"\nStudent '{student_id}' not found. Update failed\n")
+    else:
+        print("\nStudent updated successfully:\n")
+        pprint(student)
+        print()
+
+
+def show_delete_result(student_id, success):
+    if success:
+        print(f"\nStudent '{student_id}' deleted successfully\n")
+    else:
+        print(f"\nStudent '{student_id}' not found. Nothing deleted\n")

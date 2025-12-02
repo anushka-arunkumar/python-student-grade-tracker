@@ -4,10 +4,17 @@ from services.student_service import (
     get_top_n_students,
     filter_by_grade,
 )
-from services.statistics_service import get_class_statistics
+from services.statistics_service import (
+    get_per_subject_avg,
+    get_min_max_score_per_subject,
+    get_easiest_hardest_subject,
+    get_class_statistics,
+)
 from services.update_delete_service import update_student, delete_student
 from services.metrics_service import calculate_metrics
 from utils.file_io import load_students
+from utils.config import GRADES
+from utils.validators import validate_id, validate_name, validate_score
 from ui.display import *
 from ui.report_card_generator import generate_report_card
 
@@ -35,36 +42,47 @@ def advanced_features(user_choice, processed_students, students_list):
     match user_choice:
 
         case 1:
-            student_id = input("Enter student ID: ")
-            student = find_by_student_id(student_id, processed_students)
-            show_student_search_result(student, student_id)
+            student_id = input("Enter student ID: ").strip().upper()
+            if validate_id(student_id):
+                student = find_by_student_id(student_id, processed_students)
+                show_student_search_result(student, student_id)
+            else:
+                print("Invalid student ID")
             return None, None
 
         case 2:
-            name = input("Enter student name: ")
-            student = find_by_name(name, processed_students)
-            show_student_search_by_name(student, name)
+            name = input("Enter student name: ").strip().lower()
+            if validate_name(name):
+                student = find_by_name(name, processed_students)
+                show_student_search_by_name(student, name)
+            else:
+                print("Invalid name")
             return None, None
 
         case 3:
-            grade = input("Enter the grade (A/B/C/D/F) to filter by: ").upper()
-            if grade not in ["A", "B", "C", "D", "F"]:
+            grade = input("Enter the grade (A/B/C/D/F) to filter by: ").strip().upper()
+            if grade in GRADES:
+                students = filter_by_grade(grade, processed_students)
+                show_students_by_grade(students, grade)
+            else:
                 print("Invalid grade")
-                return None, None
-
-            students = filter_by_grade(grade, processed_students)
-            show_students_by_grade(students, grade)
             return None, None
 
         case 4:
-            while True:
-                n = input("Enter the number of top-ranked students you want to view: ")
-                if n.isdigit() and int(n) in range(1, len(processed_students) + 1):
-                    break
+            n = input("Enter the number of top-ranked students to view: ")
+            if not n.isdigit():
+                print("Invalid input. Please enter a positive number.")
+                return None, None
+
+            n = int(n)
+            if n < 1 or n > len(processed_students):
                 print(
-                    f"Invalid input. Enter a number between 1 to {len(processed_students)}"
+                    f"Invalid range. Enter a number between 1 and {len(processed_students)}."
                 )
-            get_top_n_students(int(n), processed_students)
+                return None, None
+
+            students = get_top_n_students(n, processed_students)
+            show_top_n_students(students, n)
             return None, None
 
         case 5:
@@ -73,11 +91,19 @@ def advanced_features(user_choice, processed_students, students_list):
             return None, None
 
         case 6:
-            get_class_statistics(processed_students)
+            stats = get_class_statistics(processed_students)
+            show_class_statistics(stats)
             return None, None
 
         case 7:
-            show_subject_analysis(processed_students)
+            averages = get_per_subject_avg(processed_students, SUBJECTS)
+            min_max = get_min_max_score_per_subject(processed_students, SUBJECTS)
+            easiest_hardest = get_easiest_hardest_subject(processed_students, SUBJECTS)
+
+            show_subject_averages(averages)
+            show_subject_min_max(min_max)
+            show_easiest_hardest_subject(easiest_hardest)
+
             return None, None
 
         case 8:
@@ -85,18 +111,73 @@ def advanced_features(user_choice, processed_students, students_list):
             return None, None
 
         case 9:
-            student_id = input("Enter the Student ID you want to update: ")
-            if not find_by_student_id(student_id, processed_students):
-                print(f"Student ID {student_id} not found. Please try again")
+            student_id = input("Enter the student ID to update: ").strip().upper()
+
+            if not validate_id(student_id):
+                print("Invalid student ID format")
                 return None, None
-            return update_student(student_id, students_list)
+
+            student = find_by_student_id(student_id, processed_students)
+            if not student:
+                print(f"Student '{student_id}' does not exist")
+                return None, None
+
+            print("\nEnter new values (leave blank to keep existing):\n")
+
+            updated_data = {}
+
+            # Name
+            new_name = input(f"Name ({student['name']}): ").strip()
+            if new_name:
+                updated_data["name"] = new_name
+
+            # Scores (per subject)
+            new_scores = {}
+            for subject, details in student["scores"].items():
+                curr_score = details["score"]
+                new_val = input(f"{subject} Score ({curr_score}): ").strip()
+
+                if new_val:
+                    if not validate_score(new_val):
+                        print(f"Invalid score for {subject}. Update skipped.")
+                        continue
+
+                    score = int(new_val)
+                    new_scores[subject] = score
+
+            if new_scores:
+                updated_data["scores"] = new_scores
+
+            if not updated_data:
+                print("\nNo changes entered. Nothing updated\n")
+                return None, None
+
+            updated_students_list, updated_processed_students = update_student(
+                student_id, students_list, updated_data
+            )
+            show_update_result(
+                find_by_student_id(student_id, updated_processed_students), student_id
+            )
+            return updated_students_list, updated_processed_students
 
         case 10:
-            student_id = input("Enter the Student ID you want to delete: ")
-            if not find_by_student_id(student_id, processed_students):
-                print(f"Student ID {student_id} not found. Please try again")
+            student_id = input("Enter student ID to delete: ").strip().upper()
+
+            if not validate_id(student_id):
+                print("Invalid student ID format")
                 return None, None
-            return delete_student(student_id, students_list)
+
+            updated_students_list, updated_processed_students = delete_student(
+                student_id, students_list
+            )
+
+            if updated_students_list is None:
+                show_delete_result(student_id, False)
+                return None, None
+
+            show_delete_result(student_id, True)
+
+            return updated_students_list, updated_processed_students
 
         case _:
             print("Invalid choice. Enter a number between 1 to 10")
@@ -104,7 +185,7 @@ def advanced_features(user_choice, processed_students, students_list):
 
 
 def run_app():
-    """Main UI loop (replaces main())."""
+
     students_list = load_students()
     if not students_list:
         print("Student data is not available for processing")

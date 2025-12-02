@@ -6,7 +6,6 @@ def load_students():
     """Reads students.json and returns list of valid students."""
     try:
         with open("data/students.json", "r") as file:
-            # with open("data/invalid_student_data.json", "r") as file:
             return validate_student(json.load(file))
     except FileNotFoundError:
         print(f"Error: students.json not found")

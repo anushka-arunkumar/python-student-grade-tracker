@@ -1,17 +1,4 @@
-import pprint
-
-
 def find_by_student_id(student_id, processed_students):
-    """
-    Returns the student dictionary that matches the given student_id.
-
-    Returns:
-        dict | None: The matching student if found, else None.
-
-    :param student_id (str): ID of the student to search for.
-    :param processed_students (list[dict]): List of student records.
-    """
-
     if not student_id:
         return None
 
@@ -28,16 +15,6 @@ def find_by_student_id(student_id, processed_students):
 
 
 def find_by_name(name, processed_students):
-    """
-    Returns the student dictionary that matches the given student name.
-
-    :param name (str): name of the student to search for.
-    :param processed_students (list[dict]): List of student records.
-
-    Returns:
-        dict | None: The matching student if found, else None.
-    """
-
     if not name:
         return None
 
@@ -50,16 +27,6 @@ def find_by_name(name, processed_students):
 
 
 def filter_by_grade(grade, processed_students):
-    """
-    Filter and return all students who have the specified grade.
-
-    :param grade (str): The grade to filter by (e.g., "A", "B", "C", "D", "F").
-    :param processed_students (list[dict]): List of student records.
-
-    Returns:
-        list of students with the specified grade | []: when no students with specified grade found
-    """
-
     if not grade:
         return []
 
@@ -69,5 +36,7 @@ def filter_by_grade(grade, processed_students):
 
 
 def get_top_n_students(n, processed_students):
-    for student in processed_students[:n]:
-        pprint.pprint(student)
+    if not n or n <= 0:
+        return []
+
+    return processed_students[:n]
