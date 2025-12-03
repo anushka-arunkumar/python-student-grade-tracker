@@ -42,7 +42,7 @@ The project follows **industry-standard modular architecture**, making it easy t
 - Stored inside `/data/report_cards`
 - Includes subject scores, totals, percentage, rank
 
-### JSON File Input/Output
+### JSON File Input
 - Load student data from JSON  
 - Processed data generated dynamically  
 - Safe validation
